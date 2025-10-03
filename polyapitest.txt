@@ -1,0 +1,4 @@
+Invoke-RestMethod -Uri "https://api.polygon.io/v3/reference/tickers" -Headers @{
+  Authorization = "Bearer QiJFJRvmCaea9OGVfp6n2IyYpnHF3qFN"
+}
+

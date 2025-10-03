@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}S3 Load - Reflex - Database Manager{% endblock %}
+{% block content %}
+<h1>S3 Load</h1>
+
+<form method="post" class="form">
+  <label for="bucket">S3 Bucket</label>
+  <input id="bucket" name="bucket" type="text" placeholder="my-bucket" required>
+
+  <label for="prefix">Prefix (optional)</label>
+  <input id="prefix" name="prefix" type="text" placeholder="path/to/data">
+
+  <button type="submit" class="btn primary">Start Load</button>
+</form>
+
+<p class="help">Simulates an S3 load request and flashes a status message.</p>
+{% endblock %}

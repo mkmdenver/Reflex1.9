@@ -1,0 +1,41 @@
+    try:
+        conn = get_connection()
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute("SELECT COUNT(*) FROM symbol_metadata;")
+            row = cur.fetchone()
+            symbol_count = row["count"] if row else 0
+            cur.execute("SELECT COUNT(*) FROM symbol_profile_view;")
+            row = cur.fetchone()
+            profile_count = row["count"] if row else 0
+
+            cur.execute("SELECT pg_database_size(current_database());")
+            row = cur.fetchone()
+            db_size_bytes = row["pg_database_size"] if row else 0
+            db_size_mb = round(db_size_bytes / (1024 * 1024), 2)
+
+            return {
+                "db_status": "✅ Connected",
+                "symbol_count": symbol_count,
+                "profile_count": profile_count,
+                "db_size_mb": db_size_mb,
+                "init_required": False
+            }
+
+    except Exception as e:
+        # Handle missing tables or connection errors gracefully
+        err_msg = str(e)
+        if "relation" in err_msg and "does not exist" in err_msg:
+            return {
+                "db_status": "⚠️ No tables found",
+                "symbol_count": 0,
+                "profile_count": 0,
+                "db_size_mb": 0,
+                "init_required": True
+            }
+        return {
+            "db_status": f"❌ Connection failed: {err_msg}",
+            "symbol_count": 0,
+            "profile_count": 0,
+            "db_size_mb": 0,
+            "init_required": True
+        }

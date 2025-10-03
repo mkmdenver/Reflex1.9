@@ -1,0 +1,59 @@
+{
+  "model_name": "bull_retrace_v1",
+  "version": "1.0.0",
+  "description": "Ross Cameron bull retracement: Stage-1 screens for Ross pillars; Stage-2 enforces pullback-in-uptrend with VWAP/EMA alignment and optional orderflow support. Quotes remain in memory; trades/minute bars are persisted elsewhere.",
+  "fields_required": [
+    "last_price", "rvol", "premarket_gap_pct", "float_shares", "avg_daily_volume", "spread",
+    "vwap", "ema9", "ema20", "high_of_day", "premarket_high", "pullback_pct",
+    "consolidation_bars", "trend_score", "book_imbalance"
+  ],
+  "stages": {
+    "stage1": {
+      "logic": "all",
+      "rules": [
+        { "field": "rvol",               "op": ">=",      "value": 1.8 },
+        { "field": "premarket_gap_pct",  "op": ">=",      "value": 3.0 },
+        { "field": "last_price",         "op": "between", "value": [2.0, 20.0] },
+        { "field": "avg_daily_volume",   "op": ">=",      "value": 500000 },
+        { "field": "float_shares",       "op": "between", "value": [5000000, 100000000] },
+        { "field": "spread",             "op": "<=",      "value": 0.05 }
+      ]
+    },
+    "stage2": {
+      "logic": "all",
+      "rules": [
+        { "field": "last_price",   "op": ">=",      "value_from": "params.min_price" },
+        { "field": "last_price",   "op": ">",       "field2": "vwap" },
+        { "field": "ema9",         "op": ">",       "field2": "ema20" },
+        { "field": "high_of_day",  "op": ">",       "field2": "premarket_high", "optional": true },
+        { "field": "pullback_pct", "op": "between", "value": [1.0, 5.0], "transform": "abs" },
+        { "field": "consolidation_bars", "op": ">=", "value": 2 }
+      ],
+      "any": [
+        { "field": "trend_score",    "op": ">=", "value": 0.6 },
+        { "field": "book_imbalance", "op": ">=", "value": 0.15 }
+      ]
+    }
+  },
+  "entry": {
+    "type": "breakout_pullback",
+    "params": {
+      "trigger": "break_of_pullback_high",
+      "lookback_bars": 5,
+      "require_orderflow": true,
+      "imbalance_min": 0.15,
+      "book_depth": 20,
+      "min_price": 2.0
+    }
+  },
+  "exits": [
+    { "type": "fixed_stop",     "params": { "stop_pct": 3.0 } },
+    { "type": "fixed_target",   "params": { "target_pct": 6.0 } },
+    { "type": "trailing_pct",   "params": { "trail_pct": 2.0 } }
+  ],
+  "risk": {
+    "throttle": 1,
+    "torque": 0.5,
+    "max_position_pct": 10.0
+  }
+}

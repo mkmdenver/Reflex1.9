@@ -1,0 +1,35 @@
+Reflex - Database Manager
+
+Menu Strutcure accross top. Visible on all pages
+Home
+    Basic database information - nerd level.
+    This is displayed on the front door page all others are fresh module pages
+Symbol Editor
+    Description:
+	    CRUD List editor of symbols
+	    Edit symbol flags such as do_not_trade and others
+	    Set status Cold,Watch,Warm,HOT
+Back Fill from Polygon
+    Description:
+    	Single symbol or all
+    	Fundamentals retrived for all types 
+	    Recent – last trade day full data daily, min, tick
+	    Moderate – Last 5 days daily, min last 2 days tick.
+	    Large – Entire history Daily, Month 1 min, 5 days tick
+S3 Load
+    Description:
+	    Requests and loads S3 downloads from Polygon (out of scope)
+FinViz Load
+    Description:
+	    Requests and loads symbol and fundamental data list from FinViz
+Integrative check
+    Description:
+	    Basic database checks (out of scope)
+Logs	
+    Description:
+	    Log file viewer(out of scope)
+Settings
+    Submenu
+        Passwords (out of scope)
+        File locations (out of scope)
+        Initialize the Database

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Error {{ code }} · Reflex DB Manager{% endblock %}
+{% block content %}
+<h2>Error {{ code }}</h2>
+<p>{{ message or "An unexpected error occurred." }}</p>
+{% if error %}
+    <pre>{{ error }}</pre>
+{% endif %}
+{% endblock %}

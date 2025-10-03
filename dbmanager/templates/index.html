@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Home - Reflex - Database Manager{% endblock %}
+{% block content %}
+<h1>Database Status</h1>
+<div class="card">
+  <div class="row">
+    <div class="metric">
+      <div class="label">Initialized</div>
+      <div class="value">{{ 'Yes' if state['db_initialized'] else 'No' }}</div>
+    </div>
+    <div class="metric">
+      <div class="label">Symbols</div>
+      <div class="value">{{ state['symbols_count'] }}</div>
+    </div>
+    <div class="metric">
+      <div class="label">Last Backfill</div>
+      <div class="value">
+        {% if state['last_backfill'] %}{{ state['last_backfill'].strftime('%Y-%m-%d %H:%M:%S') }}{% else %}-{% endif %}
+      </div>
+    </div>
+    <div class="metric">
+      <div class="label">Last FinViz Import</div>
+      <div class="value">
+        {% if state['last_finviz_import'] %}{{ state['last_finviz_import'].strftime('%Y-%m-%d %H:%M:%S') }}{% else %}-{% endif %}
+      </div>
+    </div>
+    <div class="metric">
+      <div class="label">Last S3 Load</div>
+      <div class="value">
+        {% if state['last_s3_load'] %}{{ state['last_s3_load'].strftime('%Y-%m-%d %H:%M:%S') }}{% else %}-{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<p class="help">Use the top menu to navigate. Settings → Initialize the Database includes a safety latch.</p>
+{% endblock %}

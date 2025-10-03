@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<section>
+  <h2>Symbols</h2>
+  <div id="symbols"></div>
+</section>
+<script>
+async function load() {
+  const r = await fetch('/api/symbols');
+  const data = await r.json();
+  const el = document.getElementById('symbols');
+  if (Array.isArray(data)) {
+    el.innerHTML = '<table><tr><th>Symbol</th><th>State</th><th>Last</th><th>Momentum</th><th>Vol</th><th>Update</th></tr>' +
+      data.map(d => `<tr><td>${d.symbol}</td><td>${d.state}</td><td>${d.last_price??''}</td><td>${d.momentum??''}</td><td>${d.volume??''}</td><td>${d.last_update??''}</td></tr>`).join('') + '</table>';
+  } else {
+    el.textContent = JSON.stringify(data);
+  }
+}
+setInterval(load, 1000);
+load();
+</script>
+{% endblock %}

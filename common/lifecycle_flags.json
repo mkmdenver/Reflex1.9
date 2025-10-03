@@ -1,0 +1,9 @@
+{
+  "states": ["COLD", "WATCH", "WARM", "HOT"],
+  "default_state": "COLD",
+  "flags": {
+    "do_not_trade": false,
+    "force_watch": false,
+    "force_hot": false
+  }
+}

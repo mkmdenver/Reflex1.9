@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Back Fill from Polygon - Reflex - Database Manager{% endblock %}
+{% block content %}
+<h1>🔄 Back Fill from Polygon</h1>
+
+{% if message %}
+  <p><strong>{{ message }}</strong></p>
+{% endif %}
+
+<form method="post" class="form">
+  <label for="target">Target</label>
+  <select id="target" name="target" onchange="toggleSymbolInput()" required>
+    <option value="single">Single Symbol</option>
+    <option value="all">All Symbols</option>
+  </select>
+
+  <div id="symbol-group">
+    <label for="symbols">Symbol</label>
+    <input type="text" id="symbols" name="symbols" placeholder="e.g. AAPL">
+    <small>Enter one symbol only</small>
+  </div>
+
+  <label for="mode">Backfill Mode</label>
+  <select id="mode" name="mode" required>
+    <option value="recent">Recent</option>
+    <option value="full">Full</option>
+  </select>
+
+  <label for="range">Backfill Range</label>
+  <select id="range" name="range" required>
+    <option value="1 day">1 day</option>
+    <option value="3 days">3 days</option>
+    <option value="1 week">1 week</option>
+    <option value="1 month">1 month</option>
+    <option value="1 year">1 year</option>
+    <option value="custom">Custom</option>
+  </select>
+
+  <div class="grid-2">
+    <div>
+      <label for="start">Start (YYYY-MM-DD)</label>
+      <input type="text" id="start" name="start" placeholder="e.g. 2025-09-01">
+    </div>
+    <div>
+      <label for="end">End (YYYY-MM-DD)</label>
+      <input type="text" id="end" name="end" placeholder="e.g. 2025-09-30">
+    </div>
+  </div>
+
+  <button type="submit" class="btn primary">Start Backfill</button>
+</form>
+
+<p class="help">Choose a symbol or run for all. Select a time range or enter custom dates.</p>
+
+<script>
+  function toggleSymbolInput() {
+    const target = document.getElementById("target").value;
+    const symbolGroup = document.getElementById("symbol-group");
+    symbolGroup.style.display = target === "single" ? "block" : "none";
+  }
+  window.onload = toggleSymbolInput;
+</script>
+{% endblock %}

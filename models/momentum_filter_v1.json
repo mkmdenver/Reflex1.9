@@ -1,0 +1,63 @@
+{
+  "model_name": "momentum_filter_v2",
+  "version": "1.1.0",
+  "description": "Momentum breakout strategy with volatility and volume filters, fixed gain/stop exits, orderflow-based exit, and liquidity absorption adds. Includes cockpit-tunable parameters for live adjustment.",
+  "filter_logic": "all",
+  "filters": [
+    {
+      "field": "volatility",
+      "type": "numeric",
+      "operator": ">=",
+      "value": 0.5
+    },
+    {
+      "field": "volume",
+      "type": "numeric",
+      "operator": ">=",
+      "value": 1000000
+    }
+  ],
+  "entry_model": {
+    "type": "momentum_breakout",
+    "params": {
+      "throttle": 1.0,
+      "torque": 0.5,
+      "lookback": 5,
+      "threshold": 1.2,
+      "cooldown_seconds": 60,
+      "min_volatility": 0.5
+    }
+  },
+  "exit_models": [
+    {
+      "type": "fixed_gain",
+      "params": {
+        "target_points": 10
+      }
+    },
+    {
+      "type": "fixed_stop",
+      "params": {
+        "stop_points": 5
+      }
+    },
+    {
+      "type": "orderflow_exit",
+      "params": {
+        "volume_near_bid": true,
+        "tape_pressure_threshold": 0.3,
+        "max_hold_seconds": 300
+      }
+    }
+  ],
+  "add_model": {
+    "type": "liquidity_absorption",
+    "params": {
+      "add_size": 1,
+      "max_adds": 2,
+      "absorption_threshold": 0.8,
+      "spread_behavior": "narrowing",
+      "min_momentum": 0.01
+    }
+  }
+}

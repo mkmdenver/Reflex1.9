@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Reflexion DBManager — Dashboard{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">🧠 Reflexion DBManager</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Environment</h5>
+            <p><strong>Mode:</strong> {{ app_env }}</p>
+            <p><strong>Database:</strong> {{ db_params.dbname }}</p>
+            <p><strong>Status:</strong> {{ db_status }}</p>
+        </div>
+    </div>
+
+    {% if init_required %}
+    <div class="init-warning">
+        <strong>🧨 No database found.</strong><br>
+        Reflexion has not been initialized. <br>
+        /init-dbInitialize Database</a>
+    </div>
+    {% else %}
+    <div class="status-box">
+        <h4>📊 Database Metrics</h4>
+        <ul class="list-group">
+            <li class="list-group-item">Symbols Tracked: <strong>{{ symbol_count }}</strong></li>
+            <li class="list-group-item">Profiles Loaded: <strong>{{ profile_count }}</strong></li>
+            <li class="list-group-item">DB Size: <strong>{{ db_size_mb }} MB</strong></li>
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

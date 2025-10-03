@@ -1,0 +1,35 @@
+<!-- templates/finviz_load.html -->
+{% extends "base.html" %}
+{% block title %}Finviz Load — Reflex{% endblock %}
+{% block content %}
+<h2>Finviz Load</h2>
+<form method="post">
+  <div class="mb-2">
+    <label>Exchanges</label><br>
+    <label><input type="checkbox" name="exchanges" value="NASDAQ" checked> NASDAQ</label>
+    <label><input type="checkbox" name="exchanges" value="NYSE" checked> NYSE</label>
+    <label><input type="checkbox" name="exchanges" value="AMEX" checked> AMEX</label>
+  </div>
+  <div class="mb-2">
+    <label>Market Cap.</label>
+    <select name="market_cap">
+      <option>Small ($300mln to $2bln)</option>
+      <option>Mid ($2bln to $10bln)</option>
+      <option>Large ($10bln to $200bln)</option>
+      <option>Mega (over $200bln)</option>
+      <option>Micro ($50mln to $300mln)</option>
+      <option>Nano (under $50mln)</option>
+    </select>
+  </div>
+  <div class="mb-2">
+    <label>Price</label>
+    <select name="price">
+      <option>Over $1</option>
+      <option>Over $5</option>
+      <option>Over $10</option>
+      <option>Under $5</option>
+    </select>
+  </div>
+  <button class="btn btn-primary" type="submit">Fetch & Hydrate</button>
+</form>
+{% endblock %}

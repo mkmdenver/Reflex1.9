@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reflex - Database Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('symbol_editor') }}">Symbol Editor</a></li>
+            <li><a href="{{ url_for('backfill_polygon') }}">Back Fill</a></li>
+            <li><a href="{{ url_for('s3_load') }}">S3 Load</a></li>
+            <li><a href="{{ url_for('finviz_load') }}">FinViz Load</a></li>
+            <li><a href="{{ url_for('init_db') }}">Initialize the Database</a></li>
+        </ul>
+    </nav>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

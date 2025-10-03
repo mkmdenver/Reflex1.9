@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Initialize Database — Danger Zone{% endblock %}
+{% block content %}
+<div style="max-width:480px;margin:0 auto;padding:32px 0;">
+  <h2 style="color:#e53e3e;">
+    🧨 Init Database <span style="font-size:0.7em;">(Danger Zone)</span>
+  </h2>
+  {% if message %}
+    <div style="margin:16px 0;padding:10px 14px;background:#2d3748;color:#f6ad55;border-radius:6px;">
+      {{ message }}
+    </div>
+  {% endif %}
+  {% if token %}
+    <div style="margin-bottom:18px;">
+      <strong>Confirmation token:</strong>
+      <span style="font-family:monospace;background:#171a21;padding:4px 8px;border-radius:4px;">{{ token }}</span>
+    </div>
+  {% endif %}
+  <form method="post">
+    <button type="submit" class="btn" style="background:#e53e3e;">
+      I Understand — Initialize
+    </button>
+  </form>
+  <p style="margin-top:18px;color:#a1a1aa;">
+    This action will <strong>delete and rebuild</strong> the database. Proceed only if you are certain.
+  </p>
+</div>
+{% endblock %}

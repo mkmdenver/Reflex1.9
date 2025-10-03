@@ -1,0 +1,6 @@
+{
+  "rvol_min": 0.8,
+  "price_min": 1.0,
+  "price_max": 1000.0,
+  "baseline_volume": 1000000
+}

@@ -1,0 +1,15 @@
+Reflex - Database Manager
+Menu Strutcure accross top. Visible on all pages
+Home
+    This is displayed on the front door page all others are fresh module pages
+    It is a DB status page
+Symbol Editor
+Back Fill from Polygon
+S3 Load
+FinViz Load
+Integrative check (out of scope)
+Logs (out of scope)	
+Settings
+    Passwords (out of scope)
+    File locations (out of scope)
+    Initialize the Database
