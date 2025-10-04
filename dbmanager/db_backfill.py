@@ -23,11 +23,10 @@ for package in required_packages:
 from datetime import datetime, time, timedelta, timezone
 from matplotlib.pyplot import table
 
-from common.poly_tools import (
-    poly_fetch_daily_bars,
-    poly_fetch_minute_bars,
-    poly_fetch_ticks,
-
+from common.poly_tools_decap import (
+    fetch_daily_bars,
+    fetch_minute_bars,
+    fetch_ticks,
 )
 from common.db_writer import (
     upsert_daily_bars_for_symbol,
@@ -52,6 +51,8 @@ def last_market_day_check(reference_dt: datetime = None) -> datetime:
     if reference_dt is None:
         print("No reference date provided, using current time")
         dt = datetime.utcnow()
+    else:
+        dt = reference_dt
     print("step 1")
     nyse = mcal.get_calendar("NYSE")
     schedule = nyse.valid_days(
@@ -79,11 +80,11 @@ def ingest_daily(symbols, start, end):
     errors = []
     for symbol in symbols:
         try:
-
-            df = poly_fetch_daily_bars(symbol, start, end)
-            if df is None or df.empty:
-                raise ValueError("Empty DataFrame returned")
-            upsert_daily_bars_for_symbol(df, symbol)
+            raw = fetch_daily_bars(symbol, start, end)
+            records = _normalize_records(raw)
+            if not records:
+                raise ValueError("No rows returned")
+            upsert_daily_bars_for_symbol(symbol, records)
         except Exception as e:
             log.error(f"[❌] Daily bars failed for {symbol}: {e}")
             errors.append((symbol, "daily", str(e)))
@@ -95,10 +96,11 @@ def ingest_minute(symbols, start, end):
     for symbol in symbols:
         try:
             log.debug(f"[🔸] Minute fetch for {symbol}")
-            df = poly_fetch_minute_bars(symbol, start, end)
-            if df is None or df.empty:
-                raise ValueError("Empty DataFrame returned")
-            upsert_minute_bars_for_symbol(df, symbol)
+            raw = fetch_minute_bars(symbol, start, end)
+            records = _normalize_records(raw)
+            if not records:
+                raise ValueError("No rows returned")
+            upsert_minute_bars_for_symbol(symbol, records)
         except Exception as e:
             log.error(f"[❌] Minute bars failed for {symbol}: {e}")
             errors.append((symbol, "minute", str(e)))
@@ -110,10 +112,11 @@ def ingest_tick(symbols, start, end):
     for symbol in symbols:
         try:
             log.debug(f"[🔻] Tick fetch for {symbol}")
-            df = poly_fetch_ticks(symbol, start, end)
-            if df is None or df.empty:
-                raise ValueError("Empty DataFrame returned")
-            upsert_ticks_for_symbol(df, symbol)
+            raw = fetch_ticks(symbol, start, end)
+            records = _normalize_records(raw)
+            if not records:
+                raise ValueError("No rows returned")
+            upsert_ticks_for_symbol(symbol, records)
         except Exception as e:
             log.error(f"[❌] Tick data failed for {symbol}: {e}")
             errors.append((symbol, "tick", str(e)))
@@ -192,3 +195,18 @@ def summarize_errors(errors):
     with open("backfill_errors.log", "a") as f:
         for symbol, stage, err in errors:
             f.write(f"{datetime.utcnow().isoformat()} {symbol} [{stage}]: {err}\n")
+
+
+def _normalize_records(data):
+    """Convert Polygon responses to a list of row dictionaries."""
+    if data is None:
+        return []
+    if isinstance(data, pd.DataFrame):
+        return data.to_dict("records") if not data.empty else []
+    try:
+        df = pd.DataFrame(data)
+    except Exception as exc:  # pragma: no cover - defensive logging path
+        raise ValueError("Unable to convert data to tabular records") from exc
+    if df.empty:
+        return []
+    return df.to_dict("records")
